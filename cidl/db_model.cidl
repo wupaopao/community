@@ -1,0 +1,60 @@
+
+# 社群信息完善状态
+enum GroupPerfectionState { 
+	GroupPerfectionStateDefault      0
+	GroupPerfectionStateComplete     1
+	GroupPerfectionStateNeedComplete 2
+}
+
+
+# 社群审核状态
+enum GroupAuditState { 
+	
+	# 未审核
+	GroupAuditStateWait 0
+	
+	# 审核通过
+	GroupAuditStatePass 1
+}
+
+
+# 团购社区群体
+struct Group {
+	
+	# 社群ID
+	GroupId          uint32               [ db:"grp_id"           ]
+	
+	# 名称
+	Name             string               [ db:"name"             ]
+	
+	# 地址
+	Address          string               [ db:"address"          ]
+	
+	# 邮编
+	PostCode         string               [ db:"post_code"        ]
+	
+	# 所属的团购组织
+	OrganizationId   uint32               [ db:"org_id"           ]
+	
+	# 组织名称
+	OrganizationName string               [ db:"org_name"         ]
+	
+	# 管理员用户ID
+	ManagerUserId    string               [ db:"manager_uid"      ]
+	
+	# 管理员用户名称
+	ManagerName      string               [ db:"manager_name"     ]
+	
+	# 管理员手机
+	ManagerMobile    string               [ db:"manager_mobile"   ]
+	
+	# 资料完善状态
+	PerfectionState  GroupPerfectionState [ db:"perfection_state" ]
+	
+	# 审核状态
+	AuditState       GroupAuditState      [ db:"audit_state"      ]
+	
+	# 创建时间
+	CreateTime       datetime             [ db:"create_time"      ]
+}
+

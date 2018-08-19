@@ -1,0 +1,65 @@
+
+# 团购组织社区群列表
+GET "/community/admin/group/list/:organization_id" {
+	
+	Name "AdminGroupListByOrganizationID"
+	Type "json"
+	Ack {
+		
+		# 总数
+		Count uint32      
+		
+		# 社群列表
+		List  array<Group>
+	}
+	Params {
+		OrganizationID uint32 [ form:"organization_id" binding:"required,gt=0" ]
+	}
+	Query {
+		
+		# 页码
+		Page       uint32          [ form:"page"        binding:"required,gt=0"       ]
+		
+		# 分页大小
+		PageSize   uint32          [ form:"page_size"   binding:"required,gt=0,lt=50" ]
+		
+		# 搜索
+		Search     string          [ form:"search"      ]
+		
+		# 审核状态
+		AuditState GroupAuditState [ form:"audit_state" ]
+	}
+}
+
+
+
+# 团购组织社群详情
+GET "/community/admin/group/info/:organization_id/:group_id" {
+	
+	Name "AdminGroupInfoByOrganizationIDByGroupID"
+	Type "json"
+	Ack {
+		.Group
+		
+		# 管理员身份证号码
+		ManagerIdCardNumber string
+		
+		# 管理员身份证正面
+		ManagerIdCardFront  string
+		
+		# 管理员身份证背面
+		ManagerIdCardBack   string
+		
+		# 管理员微信昵称
+		ManagerWxNickname   string
+		
+		# 管理员微信头像
+		ManagerWxAvatar     string
+	}
+	Params {
+		GroupID        uint32 [ form:"group_id"        binding:"required,gt=0" ]
+		OrganizationID uint32 [ form:"organization_id" binding:"required,gt=0" ]
+	}
+}
+
+

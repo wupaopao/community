@@ -1,0 +1,17 @@
+subscribe:
+    service_user_service:
+        address: [
+            "10.0.0.6:9092"
+        ]
+        group: "group-community-service"
+
+    service_auth_service:
+        address: [
+            "10.0.0.6:9092"
+        ]
+        group: "group-community-service"
+
+producer:
+    brokers: [
+        "10.0.0.6:9092"
+    ]

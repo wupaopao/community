@@ -1,0 +1,43 @@
+
+# 获取社群信息
+GET "/community/wx_xcx/group/info/:group_id" {
+	
+	Name "WxXcxGroupInfoByGroupID"
+	Type "json"
+	Ack {
+		.Group
+		ManagerAvatar   string
+		ManagerNickname string
+	}
+	Params {
+		GroupID uint32 [ form:"group_id" binding:"required,gt=0" ]
+	}
+}
+
+
+
+# 添加社群
+POST "/community/wx_xcx/group/add/:organization_id" {
+	
+	Name "WxXcxGroupAddByOrganizationID"
+	Type "json"
+	Ask {
+		
+		# 管理员名称
+		ManagerName   string [ binding:"required,lte=64"  ]
+		
+		# 管理员手机
+		ManagerMobile string [ binding:"required,numeric" ]
+		
+		# 地址
+		Address       string [ binding:"required,lte=255" ]
+		
+		# 邮编
+		PostCode      string [ binding:"numeric,len=6"    ]
+	}
+	Params {
+		OrganizationID uint32 [ form:"organization_id" binding:"required,gt=0" ]
+	}
+}
+
+

@@ -1,0 +1,41 @@
+
+# 获取团购组织
+GET "/inner/community/group/info/:group_id" {
+	
+	Name "InnerCommunityGroupInfoByGroupID"
+	Type "json"
+	Ack Group
+	Params {
+		GroupID uint32 [ form:"group_id" binding:"required,gt=0" ]
+	}
+}
+
+
+
+# 通过用户ID获取团购组织
+GET "/inner/community/group/info_by_user_id/:user_id" {
+	
+	Name "InnerCommunityGroupInfoByUserIDByUserID"
+	Type "json"
+	Ack Group
+	Params {
+		UserID string [ form:"user_id" ]
+	}
+}
+
+
+
+# 获取团购组织所属社团数目
+GET "/inner/community/group/count/:organization_id" {
+	
+	Name "InnerCommunityGroupCountByOrganizationID"
+	Type "json"
+	Ack {
+		Count uint32
+	}
+	Params {
+		OrganizationID uint32 [ form:"organization_id" binding:"required,gt=0" ]
+	}
+}
+
+

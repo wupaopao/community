@@ -1,0 +1,5 @@
+mal_community:
+    driver: "mysql"
+    source: "root:@tcp(127.0.0.1:3306)/mal_community?parseTime=true&loc=Local&charset=utf8mb4,utf8"
+    max_idle: 5
+    max_open: 5

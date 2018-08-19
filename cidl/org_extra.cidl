@@ -1,0 +1,111 @@
+
+# 添加
+POST "/community/org/group/add/:organization_id" {
+	
+	Name "OrgGroupAddByOrganizationID"
+	Type "json"
+	Ask {
+		
+		# 社群名称
+		GroupName           string [ binding:"required,lte=128" ]
+		
+		# 社区合伙人提货地址
+		GroupAddress        string [ binding:"required,lte=255" ]
+		
+		# 邮编
+		GroupPostCode       string [ binding:"lte=6"            ]
+		
+		# 社区合伙人名称
+		ManagerName         string [ binding:"required,lte=64"  ]
+		
+		# 管理员手机
+		ManagerMobile       string [ binding:"required,numeric" ]
+		
+		# 身份证号
+		ManagerIdCardNumber string [ binding:"lte=18"           ]
+		
+		# 身份证正面
+		ManagerIdCardFront  string [ binding:"lte=255"          ]
+		
+		# 身份证背面
+		ManagerIdCardBack   string [ binding:"lte=255"          ]
+	}
+	Params {
+		OrganizationID uint32 [ form:"organization_id" binding:"required,gt=0" ]
+	}
+}
+
+
+
+# 编辑
+POST "/community/org/group/edit/:organization_id/:group_id" {
+	
+	Name "OrgGroupEditByOrganizationIDByGroupID"
+	Type "json"
+	Ask {
+		
+		# 社群名称
+		GroupName           string [ binding:"required,lte=128" ]
+		
+		# 社区合伙人提货地址
+		GroupAddress        string [ binding:"required,lte=255" ]
+		
+		# 邮编
+		GroupPostCode       string [ binding:"lte=6"            ]
+		
+		# 社区合伙人姓名
+		ManagerName         string [ binding:"required,lte=64"  ]
+		
+		# 社区合伙人手机
+		ManagerMobile       string [ binding:"required,numeric" ]
+		
+		# 身份证号
+		ManagerIdCardNumber string [ binding:"lte=18"           ]
+		
+		# 身份证正面
+		ManagerIdCardFront  string [ binding:"lte=255"          ]
+		
+		# 身份证反面
+		ManagerIdCardBack   string [ binding:"lte=255"          ]
+	}
+	Params {
+		OrganizationID uint32 [ form:"organization_id" binding:"required,gt=0" ]
+		GroupID        uint32 [ form:"group_id"        binding:"required,gt=0" ]
+	}
+}
+
+
+
+# 更改管理员
+POST "/community/org/group/change_manager/:organization_id/:group_id" {
+	
+	Name "OrgGroupChangeManagerByOrganizationIDByGroupID"
+	Type "json"
+	Ask {
+		
+		# 新管理员用户ID
+		NewManagerUid string [ binding:"required" ]
+	}
+	Params {
+		OrganizationID uint32 [ form:"organization_id" binding:"required,gt=0" ]
+		GroupID        uint32 [ form:"group_id"        binding:"required,gt=0" ]
+	}
+}
+
+
+
+# 审核
+POST "/community/org/group/audit/:organization_id/:group_id" {
+	
+	Name "OrgGroupAuditByOrganizationIDByGroupID"
+	Type "json"
+	Ask {
+		AuditState GroupAuditState [ binding:"required" ]
+	}
+	Params {
+		OrganizationID uint32 [ form:"organization_id" binding:"required,gt=0" ]
+		GroupID        uint32 [ form:"group_id"        binding:"required,gt=0" ]
+	}
+}
+
+

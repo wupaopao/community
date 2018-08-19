@@ -1,0 +1,30 @@
+package main
+
+import (
+	"github.com/mz-eco/mz/settings"
+)
+
+func main() {
+	var err error
+	settings.Load("")
+	//subscriber, err := mq.NewSubscriber()
+	//if err != nil {
+	//	panic(err)
+	//	return
+	//}
+	//subscriber.Run()
+
+	//consumer, err := kafka.NewConsumer("subscribe.service_user_service", settings.Get())
+	//if err != nil {
+	//	panic(err)
+	//	return
+	//}
+	//
+	//consumer.AddHandler("service-user-service", func(m *kafka.ConsumerMessage) {
+	//	fmt.Println(string(m.Value))
+	//})
+	//
+	//consumer.Run()
+
+	select {}
+}
