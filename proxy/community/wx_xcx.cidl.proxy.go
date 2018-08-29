@@ -41,7 +41,7 @@ type AskWxXcxGroupAddByOrganizationID struct {
 	ManagerName   string `binding:"required,lte=64" db:"ManagerName"`
 	ManagerMobile string `binding:"required,numeric" db:"ManagerMobile"`
 	Address       string `binding:"required,lte=255" db:"Address"`
-	PostCode      string `binding:"required,numeric,len=6" db:"PostCode"`
+	PostCode      string `binding:"numeric,len=6" db:"PostCode"`
 }
 
 func NewAskWxXcxGroupAddByOrganizationID() *AskWxXcxGroupAddByOrganizationID {

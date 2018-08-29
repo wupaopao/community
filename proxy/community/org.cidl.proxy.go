@@ -79,3 +79,41 @@ func (m *Proxy) OrgGroupInfoByOrganizationIDByGroupID(GroupID uint32,
 	}
 	return ack.Data, nil
 }
+
+type AckOrgTeamListByOrganizationID struct {
+	Count uint32  `db:"Count"`
+	List  []*Team `db:"List"`
+}
+
+func NewAckOrgTeamListByOrganizationID() *AckOrgTeamListByOrganizationID {
+	return &AckOrgTeamListByOrganizationID{
+		List: make([]*Team, 0),
+	}
+}
+
+// 社团群组列表(社团群组包含社团)
+func (m *Proxy) OrgTeamListByOrganizationID(OrganizationID uint32,
+) (*AckOrgTeamListByOrganizationID, error) {
+	type Ack struct {
+		Code    int
+		Message string
+		Data    *AckOrgTeamListByOrganizationID
+	}
+	ack := &Ack{}
+	err := m.Invoke(
+		"GET",
+		"/community/org/team/list/:organization_id",
+		nil,
+		ack,
+		map[string]interface{}{
+			"organization_id": OrganizationID,
+		},
+	)
+	if err != nil {
+		return nil, err
+	}
+	if ack.Code != 0 {
+		return nil, m.Error(ack.Code, ack.Message)
+	}
+	return ack.Data, nil
+}

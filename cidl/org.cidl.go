@@ -35,6 +35,7 @@ type ApiOrgGroupListByOrganizationID struct {
 		PageSize   uint32          `form:"page_size" binding:"required,gt=0,lt=50" db:"PageSize"`
 		Search     string          `form:"search" db:"Search"`
 		AuditState GroupAuditState `form:"audit_state" db:"AuditState"`
+		IsDisable  bool            `form:"is_disable" db:"IsDisable"`
 	}
 }
 
@@ -92,5 +93,51 @@ func (m *ApiOrgGroupInfoByOrganizationIDByGroupID) GetAck() interface{}    { ret
 func MakeApiOrgGroupInfoByOrganizationIDByGroupID() ApiOrgGroupInfoByOrganizationIDByGroupID {
 	return ApiOrgGroupInfoByOrganizationIDByGroupID{
 		Ack: NewAckOrgGroupInfoByOrganizationIDByGroupID(),
+	}
+}
+
+type AckOrgTeamListByOrganizationID struct {
+	Count uint32  `db:"Count"`
+	List  []*Team `db:"List"`
+}
+
+func NewAckOrgTeamListByOrganizationID() *AckOrgTeamListByOrganizationID {
+	return &AckOrgTeamListByOrganizationID{
+		List: make([]*Team, 0),
+	}
+}
+
+type MetaApiOrgTeamListByOrganizationID struct {
+}
+
+var META_ORG_TEAM_LIST_BY_ORGANIZATION_ID = &MetaApiOrgTeamListByOrganizationID{}
+
+func (m *MetaApiOrgTeamListByOrganizationID) GetMethod() string { return "GET" }
+func (m *MetaApiOrgTeamListByOrganizationID) GetURL() string {
+	return "/community/org/team/list/:organization_id"
+}
+func (m *MetaApiOrgTeamListByOrganizationID) GetName() string { return "OrgTeamListByOrganizationID" }
+func (m *MetaApiOrgTeamListByOrganizationID) GetType() string { return "json" }
+
+// 社团群组列表(社团群组包含社团)
+type ApiOrgTeamListByOrganizationID struct {
+	MetaApiOrgTeamListByOrganizationID
+	Ack    *AckOrgTeamListByOrganizationID
+	Params struct {
+		OrganizationID uint32 `form:"organization_id" binding:"required,gt=0" db:"OrganizationID"`
+	}
+	Query struct {
+		Page     uint32 `form:"page" binding:"required,gt=0" db:"Page"`
+		PageSize uint32 `form:"page_size" binding:"required,gt=0,lt=50" db:"PageSize"`
+	}
+}
+
+func (m *ApiOrgTeamListByOrganizationID) GetQuery() interface{}  { return &m.Query }
+func (m *ApiOrgTeamListByOrganizationID) GetParams() interface{} { return &m.Params }
+func (m *ApiOrgTeamListByOrganizationID) GetAsk() interface{}    { return nil }
+func (m *ApiOrgTeamListByOrganizationID) GetAck() interface{}    { return m.Ack }
+func MakeApiOrgTeamListByOrganizationID() ApiOrgTeamListByOrganizationID {
+	return ApiOrgTeamListByOrganizationID{
+		Ack: NewAckOrgTeamListByOrganizationID(),
 	}
 }

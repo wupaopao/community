@@ -12,6 +12,7 @@ func init() {
 	AddInnerCommunityGroupInfoByGroupIDHandler()
 	AddInnerCommunityGroupInfoByUserIDByUserIDHandler()
 	AddInnerCommunityGroupCountByOrganizationIDHandler()
+	AddInnerCommunityGroupTeamByGroupIDHandler()
 }
 
 type InnerCommunityGroupInfoByGroupIDImpl struct {
@@ -100,10 +101,42 @@ func (m *InnerCommunityGroupCountByOrganizationIDImpl) Handler(ctx *http.Context
 
 	organizationId := m.Params.OrganizationID
 	dbCommunity := db.NewMallCommunity()
-	m.Ack.Count, err = dbCommunity.GroupCount(organizationId, cidl.GroupAuditStatePass)
+	m.Ack.Count, err = dbCommunity.GroupCount(organizationId, cidl.GroupAuditStatePass, false)
 	if err != nil {
 		ctx.Errorf(api.ErrDbQueryFailed, "get audit pass group failed. %s", err)
 		return
 	}
 	ctx.Json(m.Ack)
 }
+
+type InnerCommunityGroupTeamByGroupIDImpl struct {
+	cidl.ApiInnerCommunityGroupTeamByGroupID
+}
+
+func AddInnerCommunityGroupTeamByGroupIDHandler() {
+	AddHandler(
+		cidl.META_INNER_COMMUNITY_GROUP_TEAM_BY_GROUP_ID,
+		func() http.ApiHandler {
+			return &InnerCommunityGroupTeamByGroupIDImpl{
+				ApiInnerCommunityGroupTeamByGroupID: cidl.MakeApiInnerCommunityGroupTeamByGroupID(),
+			}
+		},
+	)
+}
+
+func (m *InnerCommunityGroupTeamByGroupIDImpl) Handler(ctx *http.Context) {
+	var (
+		err error
+	)
+
+	groupId := m.Params.GroupID
+	dbCommunity := db.NewMallCommunity()
+	teamIds, err := dbCommunity.GetGroupTeamIds(groupId)
+	if err != nil {
+		ctx.Errorf(api.ErrDbQueryFailed, "get group failed. %s", err)
+		return
+	}
+	m.Ack.TeamIDs = teamIds
+	ctx.Json(m.Ack)
+}
+

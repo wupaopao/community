@@ -38,4 +38,16 @@ GET "/inner/community/group/count/:organization_id" {
 	}
 }
 
+# 获取社团所属的组
+GET "/inner/community/group/team/:group_id" {
+	
+	Name "InnerCommunityGroupTeamByGroupID"
+	Type "json"
+	Ack {
+		TeamIDs array<uint32>
+	} 
+	Params {
+		GroupID uint32 [ form:"group_id" binding:"required,gt=0" ]
+	}
+}
 

@@ -2,6 +2,8 @@ package impls
 
 import (
 	"business/auth"
+	//for test
+	"fmt"
 
 	"github.com/mz-eco/mz/http"
 )
@@ -9,6 +11,8 @@ import (
 var AccessControlHandlers []http.AccessControlHandler
 
 func AddAccessControlHandler(handler http.AccessControlHandler) {
+	//for test
+	fmt.Println("add access control handler")
 	AccessControlHandlers = append(AccessControlHandlers, handler)
 }
 

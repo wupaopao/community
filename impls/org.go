@@ -12,6 +12,7 @@ import (
 func init() {
 	AddOrgGroupListByOrganizationIDHandler()
 	AddOrgGroupInfoByOrganizationIDByGroupIDHandler()
+	AddOrgTeamListByOrganizationIDHandler()
 }
 
 type OrgGroupListByOrganizationIDImpl struct {
@@ -37,9 +38,9 @@ func (m *OrgGroupListByOrganizationIDImpl) Handler(ctx *http.Context) {
 	ack := m.Ack
 	dbCommunity := db.NewMallCommunity()
 	if m.Query.Search == "" {
-		ack.Count, err = dbCommunity.GroupCount(organizationId, m.Query.AuditState)
+		ack.Count, err = dbCommunity.GroupCount(organizationId, m.Query.AuditState, m.Query.IsDisable)
 	} else {
-		ack.Count, err = dbCommunity.GroupSearchCount(organizationId, m.Query.Search, m.Query.AuditState)
+		ack.Count, err = dbCommunity.GroupSearchCount(organizationId, m.Query.Search, m.Query.AuditState, m.Query.IsDisable)
 	}
 
 	if err != nil {
@@ -53,9 +54,9 @@ func (m *OrgGroupListByOrganizationIDImpl) Handler(ctx *http.Context) {
 	}
 
 	if m.Query.Search == "" {
-		ack.List, err = dbCommunity.GroupList(organizationId, m.Query.Page, m.Query.PageSize, m.Query.AuditState, false)
+		ack.List, err = dbCommunity.GroupList(organizationId, m.Query.Page, m.Query.PageSize, m.Query.AuditState, m.Query.IsDisable,false)
 	} else {
-		ack.List, err = dbCommunity.GroupSearchList(organizationId, m.Query.Page, m.Query.PageSize, m.Query.Search, m.Query.AuditState, false)
+		ack.List, err = dbCommunity.GroupSearchList(organizationId, m.Query.Page, m.Query.PageSize, m.Query.Search, m.Query.AuditState, m.Query.IsDisable, false)
 	}
 
 	if err != nil {
@@ -112,3 +113,50 @@ func (m *OrgGroupInfoByOrganizationIDByGroupIDImpl) Handler(ctx *http.Context) {
 
 	ctx.Json(m.Ack)
 }
+
+type OrgTeamListByOrganizationIDImpl struct {
+	cidl.ApiOrgTeamListByOrganizationID
+}
+
+func AddOrgTeamListByOrganizationIDHandler() {
+	AddHandler(
+		cidl.META_ORG_TEAM_LIST_BY_ORGANIZATION_ID,
+		func() http.ApiHandler {
+			return &OrgTeamListByOrganizationIDImpl{
+				ApiOrgTeamListByOrganizationID: cidl.MakeApiOrgTeamListByOrganizationID(),
+			}
+		},
+	)
+}
+
+func (m *OrgTeamListByOrganizationIDImpl) Handler(ctx *http.Context) {
+	var (
+		err error
+	)
+	organizationId := m.Params.OrganizationID
+	ack := m.Ack
+	dbCommunity := db.NewMallCommunity()
+	ack.Count, err = dbCommunity.TeamCount(organizationId)
+
+	if err != nil {
+		ctx.Errorf(api.ErrDbQueryFailed, "query team count failed. %s", err)
+		return
+	}
+
+	if ack.Count == 0 {
+		ctx.Json(ack)
+		return
+	}
+
+	ack.List, err = dbCommunity.TeamList(organizationId, m.Query.Page, m.Query.PageSize)
+
+	if err != nil {
+		ctx.Errorf(api.ErrDbQueryFailed, "query team list failed. %s", err)
+		return
+	}
+
+	ctx.Json(ack)
+}
+
+
+

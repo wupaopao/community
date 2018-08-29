@@ -109,3 +109,115 @@ POST "/community/org/group/audit/:organization_id/:group_id" {
 }
 
 
+# 添加社团群组
+POST "/community/org/team/add/:organization_id" {
+	
+	Name "OrgTeamAddByOrganizationID"
+	Type "json"
+	Ask {
+		
+		# 社群组织名称
+		TeamName           string [ binding:"required,lte=128" ]
+	}
+	Params {
+		OrganizationID uint32 [ form:"organization_id" binding:"required,gt=0" ]
+	}
+}
+
+
+
+# 编辑社团群组
+POST "/community/org/team/edit/:organization_id/:team_id" {
+	
+	Name "OrgTeamEditByOrganizationIDByTeamID"
+	Type "json"
+	Ask {
+		
+		# 社团群组名称
+		TeamName           string [ binding:"required,lte=128" ]
+	}
+	Params {
+		OrganizationID uint32 [ form:"organization_id" binding:"required,gt=0" ]
+		TeamID        uint32 [ form:"team_id"        binding:"required,gt=0" ]
+	}
+}
+
+
+# 删除社团群组
+POST "/community/org/team/delete/:organization_id/:team_id" {
+	
+	Name "OrgTeamDeleteByOrganizationIDByTeamID"
+	Type "json"
+	Params {
+		OrganizationID uint32 [ form:"organization_id" binding:"required,gt=0" ]
+		TeamID        uint32 [ form:"team_id"        binding:"required,gt=0" ]
+	}
+}
+
+# 群组关联社团
+POST "/community/org/team/bind/group/:organization_id/:team_id" {
+
+	Name "OrgTeamBindGroupByOrganizationIDByTeamID"
+	Type "json"
+	Ask {
+		
+		# 社团ID列表 
+		GroupIDs array<uint32>
+	}
+	Params {
+		OrganizationID uint32 [ form:"organization_id" binding:"required,gt=0" ]
+		TeamID        uint32 [ form:"team_id"        binding:"required,gt=0" ]
+	}
+}
+
+# 群组已关联社团列表
+POST "/community/org/team/group/binded/list/:organization_id/:team_id" {
+
+	Name "OrgTeamGroupBindedListByOrganizationIDByTeamID"
+	Type "json"
+	Ack {
+		#关联社团列表
+		Groups array<SubGroup>
+	}
+	Params {
+		OrganizationID uint32 [ form:"organization_id" binding:"required,gt=0" ]
+		TeamID        uint32 [ form:"team_id"        binding:"required,gt=0" ]
+	}
+
+}
+
+# 群组未关联社团列表
+POST "/community/org/team/group/unbinded/list/:organization_id/:team_id" {
+
+	Name "OrgTeamGroupUnbindedListByOrganizationIDByTeamID"
+	Type "json"
+	Ask {
+		#搜索社团名称或团长名称
+		Key string
+	}
+	Params {
+		OrganizationID uint32 [ form:"organization_id" binding:"required,gt=0" ]
+		TeamID        uint32 [ form:"team_id"        binding:"required,gt=0" ]
+	}
+	Ack {
+		#未关联社团列表
+		Groups array<SubGroup>
+	}
+
+}
+
+# 禁用团购组织成员
+POST "/community/org/group/disable/:organization_id/:group_id" {
+
+	Name "OrgGroupDisableByOrganizationIDByGroupID"
+	Type "json"
+	Ask {
+
+		# 是否禁用
+		IsDisable bool
+	}
+	Params {
+		OrganizationID uint32 [ form:"organization_id" binding:"required,gt=0" ]
+		GroupID        uint32 [ form:"group_id"         binding:"required"      ]
+	}
+}

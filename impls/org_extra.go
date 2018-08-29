@@ -16,6 +16,13 @@ func init() {
 	AddOrgGroupEditByOrganizationIDByGroupIDHandler()
 	AddOrgGroupChangeManagerByOrganizationIDByGroupIDHandler()
 	AddOrgGroupAuditByOrganizationIDByGroupIDHandler()
+	AddOrgTeamAddByOrganizationIDHandler()
+ 	AddOrgTeamEditByOrganizationIDByTeamIDHandler()
+	AddOrgTeamDeleteByOrganizationIDByTeamIDHandler()
+	AddOrgTeamBindGroupByOrganizationIDByTeamIDHandler()
+	AddOrgTeamGroupBindedListByOrganizationIDByTeamIDHandler()
+	AddOrgTeamGroupUnbindedListByOrganizationIDByTeamIDHandler()
+	AddOrgGroupDisableByOrganizationIDByGroupIDHandler()
 
 }
 
@@ -370,4 +377,258 @@ func (m *OrgGroupAuditByOrganizationIDByGroupIDImpl) Handler(ctx *http.Context) 
 	}
 
 	ctx.Succeed()
+}
+
+// 添加社团分组
+type OrgTeamAddByOrganizationIDImpl struct {
+	cidl.ApiOrgTeamAddByOrganizationID
+}
+
+func AddOrgTeamAddByOrganizationIDHandler() {
+	AddHandler(
+		cidl.META_ORG_TEAM_ADD_BY_ORGANIZATION_ID,
+		func() http.ApiHandler {
+			return &OrgTeamAddByOrganizationIDImpl{
+				ApiOrgTeamAddByOrganizationID: cidl.MakeApiOrgTeamAddByOrganizationID(),
+			}
+		},
+	)
+}
+
+func (m *OrgTeamAddByOrganizationIDImpl) Handler(ctx *http.Context) {
+	var (
+		err error
+	)
+	organizationId := m.Params.OrganizationID
+	name := m.Ask.TeamName
+	dbCommunity := db.NewMallCommunity()
+
+	_, err = dbCommunity.AddTeam(organizationId, name)
+	if err != nil {
+		ctx.Errorf(api.ErrDBInsertFailed, "insert team failed. %s", err)
+		return
+	}
+
+	ctx.Succeed()
+}
+
+// 编辑社团分组
+type OrgTeamEditByOrganizationIDByTeamIDImpl struct {
+	cidl.ApiOrgTeamEditByOrganizationIDByTeamID
+}
+
+func AddOrgTeamEditByOrganizationIDByTeamIDHandler() {
+	AddHandler(
+		cidl.META_ORG_TEAM_EDIT_BY_ORGANIZATION_ID_BY_TEAM_ID,
+		func() http.ApiHandler {
+			return &OrgTeamEditByOrganizationIDByTeamIDImpl{
+				ApiOrgTeamEditByOrganizationIDByTeamID: cidl.MakeApiOrgTeamEditByOrganizationIDByTeamID(),
+			}
+		},
+	)
+}
+
+func (m *OrgTeamEditByOrganizationIDByTeamIDImpl) Handler(ctx *http.Context) {
+	var (
+		err error
+	)
+	//organizationId := m.Params.OrganizationID
+	teamId := m.Params.TeamID
+	name := m.Ask.TeamName
+	dbCommunity := db.NewMallCommunity()
+
+	_, err = dbCommunity.UpdateTeam(teamId, name)
+	if err != nil {
+		ctx.Errorf(api.ErrDBUpdateFailed, "update team failed. %s", err)
+		return
+	}
+
+	ctx.Succeed()
+}
+
+
+// 删除社团分组
+type OrgTeamDeleteByOrganizationIDByTeamIDImpl struct {
+	cidl.ApiOrgTeamDeleteByOrganizationIDByTeamID
+}
+
+func AddOrgTeamDeleteByOrganizationIDByTeamIDHandler() {
+	AddHandler(
+		cidl.META_ORG_TEAM_DELETE_BY_ORGANIZATION_ID_BY_TEAM_ID,
+		func() http.ApiHandler {
+			return &OrgTeamDeleteByOrganizationIDByTeamIDImpl{
+				ApiOrgTeamDeleteByOrganizationIDByTeamID: cidl.MakeApiOrgTeamDeleteByOrganizationIDByTeamID(),
+			}
+		},
+	)
+}
+
+func (m *OrgTeamDeleteByOrganizationIDByTeamIDImpl) Handler(ctx *http.Context) {
+	var (
+		err error
+	)
+	//organizationId := m.Params.OrganizationID
+	teamId := m.Params.TeamID
+	dbCommunity := db.NewMallCommunity()
+
+	_, err = dbCommunity.DeleteTeam(teamId)
+	if err != nil {
+		ctx.Errorf(api.ErrDBUpdateFailed, "update team failed. %s", err)
+		return
+	}
+
+	ctx.Succeed()
+}
+
+
+// 群组绑定社团
+type OrgTeamBindGroupByOrganizationIDByTeamIDImpl struct {
+	cidl.ApiOrgTeamBindGroupByOrganizationIDByTeamID
+}
+
+func AddOrgTeamBindGroupByOrganizationIDByTeamIDHandler() {
+	AddHandler(
+		cidl.META_ORG_TEAM_BIND_GROUP_BY_ORGANIZATION_ID_BY_TEAM_ID,
+		func() http.ApiHandler {
+			return &OrgTeamBindGroupByOrganizationIDByTeamIDImpl{
+				ApiOrgTeamBindGroupByOrganizationIDByTeamID: cidl.MakeApiOrgTeamBindGroupByOrganizationIDByTeamID(),
+			}
+		},
+	)
+}
+
+func (m *OrgTeamBindGroupByOrganizationIDByTeamIDImpl) Handler(ctx *http.Context) {
+	var (
+		err error
+	)
+	//organizationId := m.Params.OrganizationID
+	teamId := m.Params.TeamID
+	groupIds := m.Ask.GroupIDs
+	dbCommunity := db.NewMallCommunity()
+
+	_, err = dbCommunity.TeamBindGroups(teamId, groupIds)
+	if err != nil {
+		ctx.Errorf(api.ErrDBInsertFailed, "insert team  groups failed. %s", err)
+		return
+	}
+
+	ctx.Succeed()
+}
+
+// 群组已关联社团列表
+type OrgTeamGroupBindedListByOrganizationIDByTeamIDImpl struct {
+	cidl.ApiOrgTeamGroupBindedListByOrganizationIDByTeamID
+}
+
+func AddOrgTeamGroupBindedListByOrganizationIDByTeamIDHandler() {
+	AddHandler(
+		cidl.META_ORG_TEAM_GROUP_BINDED_LIST_BY_ORGANIZATION_ID_BY_TEAM_ID,
+		func() http.ApiHandler {
+			return &OrgTeamGroupBindedListByOrganizationIDByTeamIDImpl{
+				ApiOrgTeamGroupBindedListByOrganizationIDByTeamID : cidl.MakeApiOrgTeamGroupBindedListByOrganizationIDByTeamID(),
+			}
+		},
+	)
+}
+
+func (m *OrgTeamGroupBindedListByOrganizationIDByTeamIDImpl) Handler(ctx *http.Context) {
+	var (
+		err error
+	)
+	organizationId := m.Params.OrganizationID
+	teamId := m.Params.TeamID
+	dbCommunity := db.NewMallCommunity()
+
+	groups, err := dbCommunity.TeamGroups(organizationId, teamId, true, "")
+	if err != nil {
+		ctx.Errorf(api.ErrDBInsertFailed, "get team  binded groups failed. %s", err)
+		return
+	}
+	
+	m.Ack.Groups = groups
+
+	ctx.Json(m.Ack)
+}
+
+// 群组未关联社团列表
+type OrgTeamGroupUnbindedListByOrganizationIDByTeamIDImpl struct {
+	cidl.ApiOrgTeamGroupUnbindedListByOrganizationIDByTeamID
+}
+
+func AddOrgTeamGroupUnbindedListByOrganizationIDByTeamIDHandler() {
+	AddHandler(
+		cidl.META_ORG_TEAM_GROUP_UNBINDED_LIST_BY_ORGANIZATION_ID_BY_TEAM_ID,
+		func() http.ApiHandler {
+			return &OrgTeamGroupUnbindedListByOrganizationIDByTeamIDImpl{
+				ApiOrgTeamGroupUnbindedListByOrganizationIDByTeamID : cidl.MakeApiOrgTeamGroupUnbindedListByOrganizationIDByTeamID(),
+			}
+		},
+	)
+}
+
+func (m *OrgTeamGroupUnbindedListByOrganizationIDByTeamIDImpl) Handler(ctx *http.Context) {
+	var (
+		err error
+	)
+	organizationId := m.Params.OrganizationID
+	teamId := m.Params.TeamID
+	key := m.Ask.Key
+	dbCommunity := db.NewMallCommunity()
+
+	groups, err := dbCommunity.TeamGroups(organizationId, teamId, false, key)
+	if err != nil {
+		ctx.Errorf(api.ErrDBInsertFailed, "get team unbinded groups failed. %s", err)
+		return
+	}
+	
+	m.Ack.Groups = groups
+
+	ctx.Json(m.Ack)
+}
+
+// 禁用团购组织成员 
+type OrgGroupDisableByOrganizationIDByGroupIDImpl struct {
+	cidl.ApiOrgGroupDisableByOrganizationIDByGroupID
+}
+
+func AddOrgGroupDisableByOrganizationIDByGroupIDHandler() {
+	AddHandler(
+		cidl.META_ORG_GROUP_DISABLE_BY_ORGANIZATION_ID_BY_GROUP_ID,
+		func() http.ApiHandler {
+			return &OrgGroupDisableByOrganizationIDByGroupIDImpl{
+				ApiOrgGroupDisableByOrganizationIDByGroupID : cidl.MakeApiOrgGroupDisableByOrganizationIDByGroupID(),
+			}
+		},
+	)
+}
+
+func (m *OrgGroupDisableByOrganizationIDByGroupIDImpl) Handler(ctx *http.Context) {
+	var (
+		err error
+	)
+        dbCommunity := db.NewMallCommunity()
+        strSql := `UPDATE cmt_group SET is_disable=? WHERE grp_id=? AND org_id=?`
+        _, err = dbCommunity.DB.Exec(strSql, m.Ask.IsDisable, m.Params.GroupID, m.Params.OrganizationID)
+        if err != nil {
+                ctx.Errorf(api.ErrDBUpdateFailed, "update group is_disable failed. %s", err)
+                return
+        }
+
+	group, err := dbCommunity.GetGroup(m.Params.GroupID)
+	if err != nil {
+                ctx.Errorf(api.ErrDbQueryFailed, "get group failed. %s", err)
+	}
+	
+
+	askDisable := &user.AskInnerUserSetIsDisableByUserID{          
+               	UserType:   user.CmtManager,            
+                IsDisable: m.Ask.IsDisable,           
+        }       
+        _, err = user.NewProxy("user-service").InnerUserSetIsDisableByUserID(group.ManagerUserId, askDisable)
+        if err != nil {                               
+                ctx.Errorf(api.ErrProxyFailed, "set is_disable by user_id failed. %s", err)
+                return
+        }     
+
+        ctx.Succeed()
 }

@@ -67,3 +67,80 @@ func TestMallCommunity_AddGroup_all(t *testing.T) {
 		}
 	}
 }
+
+func TestMallCommunity_AddTeam(t *testing.T) {
+	teamName := "test"
+	dbCommunity := NewMallCommunity()
+	_, err := dbCommunity.AddTeam(15,teamName)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+}
+
+func TestMallCommunity_UpdateTeam(t *testing.T) {
+	teamName := "testEdit"
+	teamId := (uint32)(1)
+	dbCommunity := NewMallCommunity()
+	_, err := dbCommunity.UpdateTeam(teamId,teamName)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+}
+
+func TestMallCommunity_DeleteTeam(t *testing.T) {
+	teamId := (uint32)(5) 
+	dbCommunity := NewMallCommunity()
+	_, err := dbCommunity.DeleteTeam(teamId)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+}
+
+func TestMallCommunity_TeamBindGroups(t *testing.T) {
+	teamId := (uint32)(5) 
+	groupIds := []uint32{361, 384}
+	dbCommunity := NewMallCommunity()
+	_, err := dbCommunity.TeamBindGroups(teamId, groupIds)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+}
+
+func TestMallCommunity_TeamGroups(t *testing.T) {
+	teamId := (uint32)(5) 
+	orgId := (uint32)(15)
+	dbCommunity := NewMallCommunity()
+	groups, err := dbCommunity.TeamGroups(orgId, teamId, true, "")
+	if err != nil {
+		t.Error(err)
+		return
+	}
+
+	for _, group := range groups {
+		fmt.Println("bind group:", group)
+	}
+
+	groups, err = dbCommunity.TeamGroups(orgId, teamId, false, "")
+	if err != nil {
+		t.Error(err)
+		return
+	}
+
+	for _, group := range groups {
+		fmt.Println("unbind group:", group)
+	}
+	groups, err = dbCommunity.TeamGroups(orgId, teamId, false, "小程序审核二")
+	if err != nil {
+		t.Error(err)
+		return
+	}
+
+	for _, group := range groups {
+		fmt.Println("unbind search group:", group)
+	}
+
+}

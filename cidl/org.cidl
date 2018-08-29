@@ -28,6 +28,9 @@ GET "/community/org/group/list/:organization_id" {
 		
 		# 审核状态
 		AuditState GroupAuditState [ form:"audit_state" ]
+
+		# 禁用状态(为true时返回禁用列表)
+		IsDisable  bool		   [ form:"is_disable" ]
 	}
 }
 
@@ -62,4 +65,31 @@ GET "/community/org/group/info/:organization_id/:group_id" {
 	}
 }
 
+
+# 社团群组列表(社团群组包含社团)
+GET "/community/org/team/list/:organization_id" {
+	
+	Name "OrgTeamListByOrganizationID"
+	Type "json"
+	Ack {
+		
+		# 总数
+		Count uint32      
+		
+		# 社群列表
+		List  array<Team>
+	}
+	Params {
+		OrganizationID uint32 [ form:"organization_id" binding:"required,gt=0" ]
+	}
+	Query {
+		
+		# 页码
+		Page       uint32          [ form:"page"        binding:"required,gt=0"       ]
+		
+		# 分页大小
+		PageSize   uint32          [ form:"page_size"   binding:"required,gt=0,lt=50" ]
+		
+	}
+}
 

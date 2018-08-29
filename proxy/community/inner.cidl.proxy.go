@@ -88,3 +88,40 @@ func (m *Proxy) InnerCommunityGroupCountByOrganizationID(OrganizationID uint32,
 	}
 	return ack.Data, nil
 }
+
+type AckInnerCommunityGroupTeamByGroupID struct {
+	TeamIDs []uint32 `db:"TeamIDs"`
+}
+
+func NewAckInnerCommunityGroupTeamByGroupID() *AckInnerCommunityGroupTeamByGroupID {
+	return &AckInnerCommunityGroupTeamByGroupID{
+		TeamIDs: make([]uint32, 0),
+	}
+}
+
+// 获取社团所属的组
+func (m *Proxy) InnerCommunityGroupTeamByGroupID(GroupID uint32,
+) (*AckInnerCommunityGroupTeamByGroupID, error) {
+	type Ack struct {
+		Code    int
+		Message string
+		Data    *AckInnerCommunityGroupTeamByGroupID
+	}
+	ack := &Ack{}
+	err := m.Invoke(
+		"GET",
+		"/inner/community/group/team/:group_id",
+		nil,
+		ack,
+		map[string]interface{}{
+			"group_id": GroupID,
+		},
+	)
+	if err != nil {
+		return nil, err
+	}
+	if ack.Code != 0 {
+		return nil, m.Error(ack.Code, ack.Message)
+	}
+	return ack.Data, nil
+}

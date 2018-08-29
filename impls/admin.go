@@ -37,9 +37,9 @@ func (m *AdminGroupListByOrganizationIDImpl) Handler(ctx *http.Context) {
 	ack := m.Ack
 	dbCommunity := db.NewMallCommunity()
 	if m.Query.Search == "" {
-		ack.Count, err = dbCommunity.GroupCount(organizationId, m.Query.AuditState)
+		ack.Count, err = dbCommunity.GroupCount(organizationId, m.Query.AuditState, false) 
 	} else {
-		ack.Count, err = dbCommunity.GroupSearchCount(organizationId, m.Query.Search, m.Query.AuditState)
+		ack.Count, err = dbCommunity.GroupSearchCount(organizationId, m.Query.Search, m.Query.AuditState, false)
 	}
 
 	if err != nil {
@@ -53,9 +53,9 @@ func (m *AdminGroupListByOrganizationIDImpl) Handler(ctx *http.Context) {
 	}
 
 	if m.Query.Search == "" {
-		ack.List, err = dbCommunity.GroupList(organizationId, m.Query.Page, m.Query.PageSize, m.Query.AuditState, false)
+		ack.List, err = dbCommunity.GroupList(organizationId, m.Query.Page, m.Query.PageSize, m.Query.AuditState, false, false)
 	} else {
-		ack.List, err = dbCommunity.GroupSearchList(organizationId, m.Query.Page, m.Query.PageSize, m.Query.Search, m.Query.AuditState, false)
+		ack.List, err = dbCommunity.GroupSearchList(organizationId, m.Query.Page, m.Query.PageSize, m.Query.Search, m.Query.AuditState, false, false)
 	}
 
 	if err != nil {

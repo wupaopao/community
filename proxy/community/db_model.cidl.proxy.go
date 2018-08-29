@@ -61,8 +61,31 @@ type Group struct {
 	PerfectionState  GroupPerfectionState `db:"perfection_state"`
 	AuditState       GroupAuditState      `db:"audit_state"`
 	CreateTime       time.Time            `db:"create_time"`
+	IsDisable        bool                 `db:"is_disable"`
 }
 
 func NewGroup() *Group {
 	return &Group{}
+}
+
+// 群组
+type Team struct {
+	TeamId     uint32 `db:"grp_id"`
+	Name       string `db:"name"`
+	GroupCount uint32 `db:"GroupCount"`
+}
+
+func NewTeam() *Team {
+	return &Team{}
+}
+
+// 群组关联社团信息
+type SubGroup struct {
+	GroupId     uint32 `db:"grp_id"`
+	Name        string `db:"name"`
+	ManagerName string `db:"manager_name"`
+}
+
+func NewSubGroup() *SubGroup {
+	return &SubGroup{}
 }

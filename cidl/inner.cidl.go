@@ -106,3 +106,46 @@ func MakeApiInnerCommunityGroupCountByOrganizationID() ApiInnerCommunityGroupCou
 		Ack: NewAckInnerCommunityGroupCountByOrganizationID(),
 	}
 }
+
+type AckInnerCommunityGroupTeamByGroupID struct {
+	TeamIDs []uint32 `db:"TeamIDs"`
+}
+
+func NewAckInnerCommunityGroupTeamByGroupID() *AckInnerCommunityGroupTeamByGroupID {
+	return &AckInnerCommunityGroupTeamByGroupID{
+		TeamIDs: make([]uint32, 0),
+	}
+}
+
+type MetaApiInnerCommunityGroupTeamByGroupID struct {
+}
+
+var META_INNER_COMMUNITY_GROUP_TEAM_BY_GROUP_ID = &MetaApiInnerCommunityGroupTeamByGroupID{}
+
+func (m *MetaApiInnerCommunityGroupTeamByGroupID) GetMethod() string { return "GET" }
+func (m *MetaApiInnerCommunityGroupTeamByGroupID) GetURL() string {
+	return "/inner/community/group/team/:group_id"
+}
+func (m *MetaApiInnerCommunityGroupTeamByGroupID) GetName() string {
+	return "InnerCommunityGroupTeamByGroupID"
+}
+func (m *MetaApiInnerCommunityGroupTeamByGroupID) GetType() string { return "json" }
+
+// 获取社团所属的组
+type ApiInnerCommunityGroupTeamByGroupID struct {
+	MetaApiInnerCommunityGroupTeamByGroupID
+	Ack    *AckInnerCommunityGroupTeamByGroupID
+	Params struct {
+		GroupID uint32 `form:"group_id" binding:"required,gt=0" db:"GroupID"`
+	}
+}
+
+func (m *ApiInnerCommunityGroupTeamByGroupID) GetQuery() interface{}  { return nil }
+func (m *ApiInnerCommunityGroupTeamByGroupID) GetParams() interface{} { return &m.Params }
+func (m *ApiInnerCommunityGroupTeamByGroupID) GetAsk() interface{}    { return nil }
+func (m *ApiInnerCommunityGroupTeamByGroupID) GetAck() interface{}    { return m.Ack }
+func MakeApiInnerCommunityGroupTeamByGroupID() ApiInnerCommunityGroupTeamByGroupID {
+	return ApiInnerCommunityGroupTeamByGroupID{
+		Ack: NewAckInnerCommunityGroupTeamByGroupID(),
+	}
+}

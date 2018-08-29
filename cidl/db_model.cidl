@@ -56,5 +56,36 @@ struct Group {
 	
 	# 创建时间
 	CreateTime       datetime             [ db:"create_time"      ]
+
+	
+        # 是否被禁用
+        IsDisable         bool                 [ db:"is_disable"    ]
 }
+
+# 群组
+struct Team{
+	
+	# 社群ID
+	TeamId          uint32               [ db:"grp_id"           ]
+	
+	# 名称
+	Name             string               [ db:"name"             ]
+
+	# 绑定社群数量
+	GroupCount		uint32
+}
+
+# 群组关联社团信息
+struct SubGroup{
+	
+	# 社群ID
+	GroupId          uint32               [ db:"grp_id"           ]
+	
+	# 社团名称
+	Name             string               [ db:"name"             ]
+
+	# 管理员用户名称
+	ManagerName      string               [ db:"manager_name"     ]
+}
+
 
