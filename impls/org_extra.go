@@ -20,6 +20,7 @@ func init() {
  	AddOrgTeamEditByOrganizationIDByTeamIDHandler()
 	AddOrgTeamDeleteByOrganizationIDByTeamIDHandler()
 	AddOrgTeamBindGroupByOrganizationIDByTeamIDHandler()
+	AddOrgTeamUnbindGroupByOrganizationIDByTeamIDHandler()
 	AddOrgTeamGroupBindedListByOrganizationIDByTeamIDHandler()
 	AddOrgTeamGroupUnbindedListByOrganizationIDByTeamIDHandler()
 	AddOrgGroupDisableByOrganizationIDByGroupIDHandler()
@@ -481,7 +482,7 @@ func (m *OrgTeamDeleteByOrganizationIDByTeamIDImpl) Handler(ctx *http.Context) {
 }
 
 
-// 群组绑定社团
+// 社团绑定群组
 type OrgTeamBindGroupByOrganizationIDByTeamIDImpl struct {
 	cidl.ApiOrgTeamBindGroupByOrganizationIDByTeamID
 }
@@ -503,10 +504,44 @@ func (m *OrgTeamBindGroupByOrganizationIDByTeamIDImpl) Handler(ctx *http.Context
 	)
 	//organizationId := m.Params.OrganizationID
 	teamId := m.Params.TeamID
-	groupIds := m.Ask.GroupIDs
+	groupId := m.Ask.GroupID
 	dbCommunity := db.NewMallCommunity()
 
-	_, err = dbCommunity.TeamBindGroups(teamId, groupIds)
+	_, err = dbCommunity.TeamBindGroup(teamId, groupId)
+	if err != nil {
+		ctx.Errorf(api.ErrDBInsertFailed, "insert team  groups failed. %s", err)
+		return
+	}
+
+	ctx.Succeed()
+}
+
+// 社团解绑群组
+type OrgTeamUnbindGroupByOrganizationIDByTeamIDImpl struct {
+	cidl.ApiOrgTeamUnbindGroupByOrganizationIDByTeamID
+}
+
+func AddOrgTeamUnbindGroupByOrganizationIDByTeamIDHandler() {
+	AddHandler(
+		cidl.META_ORG_TEAM_UNBIND_GROUP_BY_ORGANIZATION_ID_BY_TEAM_ID,
+		func() http.ApiHandler {
+			return &OrgTeamUnbindGroupByOrganizationIDByTeamIDImpl{
+				ApiOrgTeamUnbindGroupByOrganizationIDByTeamID: cidl.MakeApiOrgTeamUnbindGroupByOrganizationIDByTeamID(),
+			}
+		},
+	)
+}
+
+func (m *OrgTeamUnbindGroupByOrganizationIDByTeamIDImpl) Handler(ctx *http.Context) {
+	var (
+		err error
+	)
+	//organizationId := m.Params.OrganizationID
+	teamId := m.Params.TeamID
+	groupId := m.Ask.GroupID
+	dbCommunity := db.NewMallCommunity()
+
+	_, err = dbCommunity.TeamUnbindGroup(teamId, groupId)
 	if err != nil {
 		ctx.Errorf(api.ErrDBInsertFailed, "insert team  groups failed. %s", err)
 		return

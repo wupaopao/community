@@ -292,13 +292,11 @@ func MakeApiOrgTeamDeleteByOrganizationIDByTeamID() ApiOrgTeamDeleteByOrganizati
 }
 
 type AskOrgTeamBindGroupByOrganizationIDByTeamID struct {
-	GroupIDs []uint32 `db:"GroupIDs"`
+	GroupID uint32 `db:"GroupID"`
 }
 
 func NewAskOrgTeamBindGroupByOrganizationIDByTeamID() *AskOrgTeamBindGroupByOrganizationIDByTeamID {
-	return &AskOrgTeamBindGroupByOrganizationIDByTeamID{
-		GroupIDs: make([]uint32, 0),
-	}
+	return &AskOrgTeamBindGroupByOrganizationIDByTeamID{}
 }
 
 type MetaApiOrgTeamBindGroupByOrganizationIDByTeamID struct {
@@ -315,7 +313,7 @@ func (m *MetaApiOrgTeamBindGroupByOrganizationIDByTeamID) GetName() string {
 }
 func (m *MetaApiOrgTeamBindGroupByOrganizationIDByTeamID) GetType() string { return "json" }
 
-// 群组关联社团
+// 群组添加社团
 type ApiOrgTeamBindGroupByOrganizationIDByTeamID struct {
 	MetaApiOrgTeamBindGroupByOrganizationIDByTeamID
 	Ask    *AskOrgTeamBindGroupByOrganizationIDByTeamID
@@ -332,6 +330,48 @@ func (m *ApiOrgTeamBindGroupByOrganizationIDByTeamID) GetAck() interface{}    { 
 func MakeApiOrgTeamBindGroupByOrganizationIDByTeamID() ApiOrgTeamBindGroupByOrganizationIDByTeamID {
 	return ApiOrgTeamBindGroupByOrganizationIDByTeamID{
 		Ask: NewAskOrgTeamBindGroupByOrganizationIDByTeamID(),
+	}
+}
+
+type AskOrgTeamUnbindGroupByOrganizationIDByTeamID struct {
+	GroupID uint32 `db:"GroupID"`
+}
+
+func NewAskOrgTeamUnbindGroupByOrganizationIDByTeamID() *AskOrgTeamUnbindGroupByOrganizationIDByTeamID {
+	return &AskOrgTeamUnbindGroupByOrganizationIDByTeamID{}
+}
+
+type MetaApiOrgTeamUnbindGroupByOrganizationIDByTeamID struct {
+}
+
+var META_ORG_TEAM_UNBIND_GROUP_BY_ORGANIZATION_ID_BY_TEAM_ID = &MetaApiOrgTeamUnbindGroupByOrganizationIDByTeamID{}
+
+func (m *MetaApiOrgTeamUnbindGroupByOrganizationIDByTeamID) GetMethod() string { return "POST" }
+func (m *MetaApiOrgTeamUnbindGroupByOrganizationIDByTeamID) GetURL() string {
+	return "/community/org/team/unbind/group/:organization_id/:team_id"
+}
+func (m *MetaApiOrgTeamUnbindGroupByOrganizationIDByTeamID) GetName() string {
+	return "OrgTeamUnbindGroupByOrganizationIDByTeamID"
+}
+func (m *MetaApiOrgTeamUnbindGroupByOrganizationIDByTeamID) GetType() string { return "json" }
+
+// 群组移除社团
+type ApiOrgTeamUnbindGroupByOrganizationIDByTeamID struct {
+	MetaApiOrgTeamUnbindGroupByOrganizationIDByTeamID
+	Ask    *AskOrgTeamUnbindGroupByOrganizationIDByTeamID
+	Params struct {
+		OrganizationID uint32 `form:"organization_id" binding:"required,gt=0" db:"OrganizationID"`
+		TeamID         uint32 `form:"team_id" binding:"required,gt=0" db:"TeamID"`
+	}
+}
+
+func (m *ApiOrgTeamUnbindGroupByOrganizationIDByTeamID) GetQuery() interface{}  { return nil }
+func (m *ApiOrgTeamUnbindGroupByOrganizationIDByTeamID) GetParams() interface{} { return &m.Params }
+func (m *ApiOrgTeamUnbindGroupByOrganizationIDByTeamID) GetAsk() interface{}    { return m.Ask }
+func (m *ApiOrgTeamUnbindGroupByOrganizationIDByTeamID) GetAck() interface{}    { return nil }
+func MakeApiOrgTeamUnbindGroupByOrganizationIDByTeamID() ApiOrgTeamUnbindGroupByOrganizationIDByTeamID {
+	return ApiOrgTeamUnbindGroupByOrganizationIDByTeamID{
+		Ask: NewAskOrgTeamUnbindGroupByOrganizationIDByTeamID(),
 	}
 }
 

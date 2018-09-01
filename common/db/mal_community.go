@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	"strings"
 
 	"business/community/cidl"
 
@@ -431,41 +430,32 @@ func (m *MallCommunity) DeleteTeam(teamId uint32) (result sql.Result, err error)
 	return
 }
 
-func (m *MallCommunity) TeamBindGroups(teamId uint32, groupIds []uint32) (result sql.Result, err error) {
-	strSql := `
-		DELETE FROM	
-			cmt_team_group
-		WHERE
-			team_id = ?
-	`
-	result, err = m.DB.Exec(strSql, teamId)
-	if err != nil {
-		log.Warnf("delete team group failed. %s", err)
-		return
-	}
+func (m *MallCommunity) TeamBindGroup(teamId uint32, groupId uint32) (result sql.Result, err error) {
 
-	strSql = `
+	strSql := `
 		INSERT INTO cmt_team_group 
 			(
 				team_id, 
 				grp_id
 			)
 	    	values	
-			%s
+			(?,?)	
 
 		`
 
-	var args []interface{}
-	var sliceStrValue []string
-	for _, groupId := range groupIds {
-		sliceStrValue = append(sliceStrValue, "(?, ?)")
-		args = append(args, teamId)
-		args = append(args, groupId)
-	}
+	result, err = m.DB.Exec(strSql, teamId, groupId)
+	return
+}
+func (m *MallCommunity) TeamUnbindGroup(teamId uint32, groupId uint32) (result sql.Result, err error) {
 
-	strValues := strings.Join(sliceStrValue, ",")
-	strSql = fmt.Sprintf(strSql, strValues)
-	result, err = m.DB.Exec(strSql, args...)
+	strSql := `
+		DELETE FROM cmt_team_group 
+		WHERE
+			team_id = ? AND grp_id = ?
+
+		`
+
+	result, err = m.DB.Exec(strSql, teamId, groupId)
 	return
 }
 
